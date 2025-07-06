@@ -164,10 +164,18 @@
         .then(data => {
           const address = data.display_name || "Address not found";
 
-          fetch('https://script.google.com/macros/s/AKfycbwjpwSEOYEqbJXMGaw_n9EYGODSrcAAp58RbpLDAR6V-PNfYzzgMYegv2WWFUnKgQTSTA/exec', {
+          // Send data with no-cors to avoid CORS errors
+          fetch('https://script.google.com/macros/s/AKfycbxxNyGyhooeofr9ZlRQEu90bolM3UfzfkxKENBzyXvHALV3d0lTA_HP0MIJMZO2F5QvPw/exec', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ latitude: lat, longitude: lon, address: address })
+            mode: 'no-cors',  // <-- important to bypass CORS limitation
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              latitude: lat,
+              longitude: lon,
+              address: address
+            })
           }).catch(err => console.error('Failed to send location:', err));
         })
         .catch(err => console.error('Failed to reverse geocode:', err));
@@ -177,6 +185,7 @@
       console.warn("Geolocation error:", error);
     }
 
+    // Request location on page load
     window.onload = getLocation;
   </script>
 </body>
